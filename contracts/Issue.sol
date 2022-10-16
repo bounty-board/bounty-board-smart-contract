@@ -5,9 +5,9 @@ pragma solidity ^0.8.0;
 contract Issue {
     mapping(address => uint) public _bounties;
     uint public _totalBounties;
-    string public _id;
+    uint public _id;
 
-    constructor(string memory id)  {
+    constructor(uint id)  {
         _id = id;
     }
 
@@ -25,7 +25,7 @@ contract Issue {
         return _bounties[add];
     }
 
-    function getId () public view returns (string memory) {
+    function getId () public view returns (uint) {
         return _id;
     }
 }

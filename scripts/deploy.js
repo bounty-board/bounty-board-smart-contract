@@ -1,10 +1,13 @@
 async function main() {
   // We get the contract to deploy
-  const Issue = await ethers.getContractFactory('Issue');
-  console.log('Deploying Issue...');
-  const issue = await Issue.deploy();
-  await issue.deployed();
-  console.log('Issue deployed to:', issue.address);
+  const Project = await ethers.getContractFactory('Project');
+  console.log('Deploying Project...');
+  const project = await Project.deploy(
+    'bountyboardsmartcontract',
+    'bounty-board'
+  );
+  await project.deployed();
+  console.log('Project deployed to:', project.address);
 }
 
 main()
