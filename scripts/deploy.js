@@ -8,6 +8,11 @@ async function main() {
   );
   await project.deployed();
   console.log('Project deployed to:', project.address);
+
+  console.log('Deploying Issue...');
+  await project.createIssue('1410376581');
+  let issueAddress = await project.getIssue('1410376581');
+  console.log('Issue deployed to:', issueAddress);
 }
 
 main()

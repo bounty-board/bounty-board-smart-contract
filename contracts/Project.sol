@@ -24,8 +24,9 @@ contract Project {
 
     function createIssue(uint _id) public returns (address) {
         Issue issue = new Issue(_id);
-        _issues[_id] = address(issue);
-        return address(issue);
+        address issueAddress = address(issue);
+        _issues[_id] = issueAddress;
+        return issueAddress;
     }
 
     function getIssue(uint id) public view returns (address) {
