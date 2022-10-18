@@ -7,12 +7,16 @@ contract Issue {
     uint public _totalBounties;
     uint public _id;
 
+    event BountyAdded(uint id, address issuer, uint amount);
+
     constructor(uint id)  {
         _id = id;
     }
 
     function addBounty(uint256 amount) payable public {
         require(msg.value == amount);
+        emit BountyAdded(_id, msg.sender, amount);
+
         _bounties[msg.sender] += amount;
         _totalBounties += amount;
     }

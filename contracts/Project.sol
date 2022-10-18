@@ -9,6 +9,8 @@ contract Project {
     string public _name;
     string public _owner;
 
+    event IssueAdded(uint id, address issuer);
+
     constructor(string memory name, string memory owner)  {
         _name = name;
         _owner = owner;
@@ -26,6 +28,7 @@ contract Project {
         Issue issue = new Issue(_id);
         address issueAddress = address(issue);
         _issues[_id] = issueAddress;
+        emit IssueAdded(_id, issueAddress);
         return issueAddress;
     }
 
