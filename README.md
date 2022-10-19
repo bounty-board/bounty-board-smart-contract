@@ -5,9 +5,26 @@ This project demonstrates a basic Hardhat use case. It comes with a sample contr
 Try running some of the following tasks:
 
 ```shell
-npx hardhat help
+npx hardhat compile
+
+// Start local blockchain
+npx hardhat node
+
+// Deploy locally
+npx hardhat run --network localhost scripts/deploy.js
+
+// Deploy on testate
+npx hardhat run --network goerli scripts/deploy.js
+
+// Interact
+npx hardhat console --network localhost
+npx hardhat console --network goerli
+
+const Issue = await ethers.getContractFactory('Issue')
+const issue = await Issue.attach('<issue address>')
+await issue.addBounty(100, {value: 100})
+
+// Test
 npx hardhat test
 REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.js
 ```
