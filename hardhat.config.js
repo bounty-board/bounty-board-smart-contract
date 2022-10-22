@@ -6,11 +6,24 @@ const { alchemyApiKey, mnemonic } = require('./secrets.json');
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: '0.8.17',
+  solidity: {
+    compilers: [
+      {
+        version: '0.8.17',
+      },
+      {
+        version: '0.6.6',
+      },
+      {
+        version: '0.4.24',
+      },
+    ],
+  },
   networks: {
     goerli: {
       url: `https://eth-goerli.alchemyapi.io/v2/${alchemyApiKey}`,
       accounts: { mnemonic: mnemonic },
     },
   },
+  sources: './contracts',
 };
