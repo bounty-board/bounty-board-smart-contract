@@ -107,8 +107,10 @@ contract('WalletCheck', function ([owner, other]) {
       userAddress
     );
 
-    const addressFromUsers = await users.getUser(username);
+    const addressFromUsers = await users.getUserAddress(username);
+    const usernameFromUsers = await users.getUsername(userAddress);
 
     expect(addressFromUsers).to.equal(userAddress);
+    expect(usernameFromUsers).to.equal(username);
   });
 });

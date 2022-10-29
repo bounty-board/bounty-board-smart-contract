@@ -14,7 +14,7 @@ async function main() {
   const Project = await ethers.getContractFactory('Project');
   console.log('Deploying Project...');
   const project = await Project.connect(deployer).deploy(
-    'bountyboardsmartcontract',
+    'bounty-board',
     'bounty-board'
   );
   await project.deployed();
@@ -31,9 +31,9 @@ async function main() {
   const chainId = await ethers.provider
     .getNetwork()
     .then((network) => network.chainId);
-
+  console.log('chainId:', chainId);
   // Define the LINK token address for the current network.
-  if (chainId === 31337) {
+  if (chainId === 1337) {
     const linkTokenFactory = await ethers.getContractFactory('LinkToken');
     linkToken = await linkTokenFactory.connect(deployer).deploy();
     console.log('LinkToken deployed to:', linkToken.address);
@@ -52,13 +52,22 @@ async function main() {
   const jobId = ethers.utils.toUtf8Bytes(networkConfig[chainId]['jobId']);
   const fee = networkConfig[chainId]['fee'];
 
+  // Deploy Users
+  const Users = await ethers.getContractFactory('Users');
+  const users = await Users.deploy();
+
+  console.log('Deploying Users...');
+  await users.deployed();
+  console.log('Users deployed to:', users.address);
+
   // Deploy WalletCheck
   const WalletCheckFactory = await ethers.getContractFactory('WalletCheck');
   const walletCheckFactory = await WalletCheckFactory.deploy(
     oracleAddress,
     jobId,
     fee,
-    linkTokenAddress
+    linkTokenAddress,
+    users.address
   );
 
   // If the dev chain only need 1 confirmations, otherwise 6

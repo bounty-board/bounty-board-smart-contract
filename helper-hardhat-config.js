@@ -8,7 +8,7 @@ const networkConfig = {
     fundAmount: '1000000000000000000',
     automationUpdateInterval: '30',
   },
-  31337: {
+  1337: {
     name: 'localhost',
     fee: '100000000000000000',
     keyHash:
