@@ -3,6 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "@chainlink/contracts/src/v0.8/ChainlinkClient.sol";
+import "./Users.sol";
 
 contract WalletCheck is ChainlinkClient{
     using Chainlink for Chainlink.Request;
@@ -11,8 +12,10 @@ contract WalletCheck is ChainlinkClient{
     bytes32 private immutable jobId;
     uint256 private immutable fee;
 
-    bytes32 public data;
+    mapping(bytes32 => string) private commitments;
 
+    bytes public data;
+    Users public users;
     /**
      * @notice Executes once when a contract is created to initialize state variables
      *
@@ -30,7 +33,8 @@ contract WalletCheck is ChainlinkClient{
         address _oracle,
         bytes32 _jobId,
         uint256 _fee,
-        address _link
+        address _link,
+        address _users
     ) {
         if (_link == address(0)) {
             setPublicChainlinkToken();
@@ -40,6 +44,7 @@ contract WalletCheck is ChainlinkClient{
         oracle = _oracle;
         jobId = _jobId;
         fee = _fee;
+        users = Users(_users);
     }
 
     function requestWalletAddress(string memory username) public returns (bytes32) {
@@ -50,15 +55,32 @@ contract WalletCheck is ChainlinkClient{
         );
 
         request.add("get", string.concat("https://raw.githubusercontent.com/", username, "/public-eth-wallet/main/address.txt"));
-        return sendChainlinkRequestTo(oracle, request, fee);
+        bytes32 res = sendOperatorRequestTo(oracle, request, fee);
+        commitments[res] = username;
+        // return sendChainlinkRequestTo(oracle, request, fee);
+        return res;
     }
 
-    function fulfill(bytes32 _requestId, bytes32 _data)
+    function fulfill(bytes32 _requestId, bytes memory _data)
         public
         recordChainlinkFulfillment(_requestId)
     {
+        // data = string(_data);
+
         data = _data;
+        // users.addUser(commitments[_requestId], address(_data));
+        users.addUser(commitments[_requestId], bytesToAddress(_data));
+    }
+
+    function getData() public view returns (bytes memory) {
+        return data;
     }
 
     function withdrawLink() external {}
+
+    function bytesToAddress(bytes memory b) public pure returns (address addr) {
+        assembly {
+             addr := mload(add(b, 20))
+       }
+    }
 }
