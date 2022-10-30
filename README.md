@@ -27,4 +27,9 @@ await issue.addBounty(100, {value: 100})
 // Test
 npx hardhat test
 REPORT_GAS=true npx hardhat test
+
+// Run local chainlink node
+Follow this video https://www.youtube.com/watch?v=ZB3GLtQvgME&t=14s
+
+In .env file in chainlink, make sure LINK_CONTRACT_ADDRESS matches deployed contract address
 ```

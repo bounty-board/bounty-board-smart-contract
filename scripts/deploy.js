@@ -38,14 +38,18 @@ async function main() {
     linkToken = await linkTokenFactory.connect(deployer).deploy();
     console.log('LinkToken deployed to:', linkToken.address);
 
-    const mockOracleFactory = await ethers.getContractFactory('MockOracle');
+    const mockOracleFactory = await ethers.getContractFactory('MockOperator');
     mockOracle = await mockOracleFactory
       .connect(deployer)
-      .deploy(linkToken.address);
+      .deploy(linkToken.address, deployer.address);
     console.log('MockOracle deployed to:', mockOracle.address);
 
     linkTokenAddress = linkToken.address;
     oracleAddress = mockOracle.address;
+  } else {
+    oracleAddress = networkConfig[chainId]['oracle'];
+    linkTokenAddress = networkConfig[chainId]['linkToken'];
+    linkToken = new ethers.Contract(linkTokenAddress, LINK_TOKEN_ABI, deployer);
   }
 
   // Get config vars
@@ -61,6 +65,7 @@ async function main() {
   console.log('Users deployed to:', users.address);
 
   // Deploy WalletCheck
+  console.log('Deploying WalletCheck...');
   const WalletCheckFactory = await ethers.getContractFactory('WalletCheck');
   const walletCheckFactory = await WalletCheckFactory.deploy(
     oracleAddress,
